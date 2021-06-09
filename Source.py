@@ -7,18 +7,14 @@ class Source:
     def __init__(self, scheduler):
         # inicialitzar element de simulació
         self.entitatsCreades = 0
-        self.state = "idle"
         self.scheduler = scheduler
-    
-    def crearConnexio(self, server):
-        self.server = server
 
     def tractarEsdeveniment(self, event):
-        if (event.tipus == 'SIMULATION START'):
+        if (event.type == 'SIMULATION_START'):
             self.simulationStart(event)
 
-        if (event.tipus == 'NEXT ARRIVAL'):
-            self.processNextArrival()
+        elif (event.type == 'NEXT ARRIVAL'):
+            self.processNextArrival(event)
 
     def simulationStart(self, event):
         nou_event = self.properaArribada(event.time)
@@ -26,25 +22,15 @@ class Source:
 
 
     def processNextArrival(self, event):
-        # Cal crear l'entitat 
-
-        # Mirar si es pot transferir a on per toqui
-        if (self.server.estat == "idle"):
-            #transferir entitat (es pot fer amb un esdeveniment immediat o invocant a un métode de l'element)
-            self.server.recullEntitat(event.time, entitat)
-        else:
-            #incrementar entitats perdudes en creació (si s'escau necessari)
-            ...
-        # Cal programar la següent arribada
-        nou_event = self.properaArribada(event.temps)
+        nou_event = self.properaArribada(event.time)
         self.scheduler.afegirEsdeveniment(nou_event)
 
     def properaArribada(self, time):
-        # cada quan generem una arribada (aleatorietat)
+        client = Client(time)
+        # cada quan generem una arribada
         tempsEntreArribades = 20
         # incrementem estadistics si s'escau
         self.entitatsCreades += 1
-        self.state = "busy"
         # programació primera arribada
-        return Event(self, 'NEXT ARRIVAL', time + tempsEntreArribades, Client)
+        return Event(self, 'NEXT ARRIVAL', time + tempsEntreArribades, client)
          

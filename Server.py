@@ -18,17 +18,17 @@ class Server:
         self.programarFinalServei(time, entitat)
 
     def tractarEsdeveniment(self, event):
-        if (event.tipus == 'COMENÇA TORN'):
-            self.desocupaBarber(self)
+        if (event.type == 'COMENÇA TORN'):
+            self.desocupaBarber()
 
         elif event.type == "ACABEM DE TALLAR":
             if self.cadires.AgafarCadiraRentar() != -1:
                 self.cadires.DeixarCadiraTallar()
-                self.scheduler.tractarEsdeveniment(Event(self, "ACABA SERVEI", event.time + 10, event.entity))
+                self.scheduler.afegirEsdeveniment(Event(self, "ACABA SERVEI", event.time + 10, event.entity))
 
         elif event.type == "ACABA SERVEI":
             self.state = "En espera"
-            self.scheduler.tractarEsdeveniment(Event(self, "BARBER LLIURE", event.time, None))
+            self.scheduler.afegirEsdeveniment(Event(self, "BARBER LLIURE", event.time, None))
 
     def ocupaBarber(self):
         self.state = "Treballant"
