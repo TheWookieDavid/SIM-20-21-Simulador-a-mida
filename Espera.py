@@ -1,6 +1,7 @@
 from Event import *
 from Person import *
 from Resources import *
+from Client import *
 
 
 class Espera:
@@ -19,9 +20,9 @@ class Espera:
             if self.ocupacio < 4:
                 self.ocupacio += 1
                 self.scheduler.tractarEsdeveniment(Event(self, 'ME CANSAO', event.time + 50, event.entity))
-                self.cua.append(event.entity)
                 barber = self.scheduler.getBarberDsiponible()
                 if self.ocupacio == 1 and barber is not None:
+                    event.entity.estat = "Ates"
                     self.cua.pop(0)
                     barber.ocupaBarber()
                     event.entity.barber = barber
@@ -33,8 +34,8 @@ class Espera:
                 self.sinsillas += 1
 
         elif event.type == "ME CANSAO":
-            if self.cua.count(event.entity) > 0:
-                self.cua.remove(event.entity)
+            if event.entity.estat == "Esperant":
+                #self.cua.remove(event.entity)
                 print("Algú marxa insatisfet de la sala d'espera")
                 self.insatisfets += 1
                 self.ocupacio -= 1
