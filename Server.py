@@ -1,15 +1,17 @@
 # millor treballar amb define o algun sistema simular a l'enum de C++
 from Event import *
+from Resources import *
 
 
 class Server:
 
-    def __init__(self, scheduler):
+    def __init__(self, scheduler, cadires):
         # inicialitzar element de simulació
         self.entitatsTractades = 0
         self.state = "En espera"
         self.scheduler = scheduler
         self.entitatActiva = None
+        self.cadires = cadires
 
     def crearConnexio(self, server2, queue):
         self.queue = queue
@@ -23,8 +25,14 @@ class Server:
         if (event.tipus == 'SIMULATION START'):
             self.simulationStart(event)
 
-        if (event.tipus == 'END_SERVICE'):
-            self.processarFiServei(event)
+        elif event.type == "ACABEM DE TALLAR":
+            if self.cadires.AgafarCadiraRentar() != -1:
+                self.cadires.DeixarCadiraTallar()
+                self.scheduler.tractarEsdeveniment(Event(self, "ACABA SERVEI", event.time + 10, event.entity))
+
+        elif event.type == "ACABA SERVEI":
+            self.state = "En espera"
+            self.scheduler.tractarEsdeveniment(Event(self, "BARBER LLIURE", event.time, None))
 
     def simulationStart(self, event):  # ignasi diu suda d'això?
         self.state = idle
@@ -49,7 +57,8 @@ class Server:
         else:
             if (self.queue.state == idle):
                 self.queue.recullEntitat(event.time, event.entitat)
-            ...
+
+
         self.state = idle
 
     def ocupaBarber(self):

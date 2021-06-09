@@ -2,26 +2,29 @@ from Espera import *
 from Server import *
 from Source import *
 from Event import *
-
+from Client import*
+from Resources import *
 
 class Scheduler:
 
     currentTime = 0
     eventList = []
-    ...
+
     
     def __init__(self):
         # creació dels objectes que composen el meu model
+        self.cadires = Resources()
         self.source = Source(self)
-        self.barber = Server(self)
-        self.queue = Espera()
-        self.barber2 = Server(self)
-        self.barber3 = Server(self)
+        self.barber = Server(self, self.cadires)
+        self.queue = Espera(self)
+        self.barber2 = Server(self, self.cadires)
+        self.barber3 = Server(self, self.cadires)
+
 
         self.source.crearConnexio(server)
         self.Server.crearConnexio(server2, queue)
         
-        self.simulationStart=Event(self,'SIMULATION_START', 0,null))
+        self.simulationStart=Event(self,'SIMULATION_START', 0,null)
         self.eventList.append(simulationStart)
 
     def run(self):

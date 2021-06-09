@@ -1,6 +1,6 @@
 #millor treballar amb define o algun sistema simular a l'enum de C++
-from enumeracions import *
 from Server import *
+from Client import *
 
 class Source:
 
@@ -47,5 +47,5 @@ class Source:
         self.entitatsCreades += 1
         self.state = "busy"
         # programació primera arribada
-        return Event(self, 'NEXT ARRIVAL', time + tempsEntreArribades, None)
+        return Event(self, 'NEXT ARRIVAL', time + tempsEntreArribades, Client)
          

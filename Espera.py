@@ -1,16 +1,18 @@
 from Event import *
 from Person import *
+from Resources import *
 
 
 class Espera:
 
-    def __init__(self, scheduler):
+    def __init__(self, scheduler, cadires):
         self.ocupacio = 0
         self.scheduler = scheduler
         self.cua = []
         self.satisfets = 0
         self.insatisfets = 0
         self.sinsillas = 0
+        self.cadires = cadires
 
     def tractarEsdeveniment(self, event):
         if event.type == "NEXT ARRIVAL":
@@ -22,8 +24,10 @@ class Espera:
                 if self.ocupacio == 1 and barber is not None:
                     self.cua.pop(0)
                     barber.ocupaBarber()
+                    event.entity.barber = barber
                     #ocupa cadira
-                    self.scheduler.tractarEsdeveniment(Event(self, "ACABEM DE TALLAR", event.time + 30, event.entity))
+                    if self.cadires.AgafarCadiraRentar() != -1:
+                        self.scheduler.tractarEsdeveniment(Event(self, "ACABEM DE TALLAR", event.time + 30, event.entity))
             else:
                 print("Marxa un client per que la cua està plena")
                 self.sinsillas += 1
@@ -35,13 +39,17 @@ class Espera:
                 self.insatisfets += 1
                 self.ocupacio -= 1
 
-        elif event.type == "ACABA SERVEI":
+        elif event.type == "BARBER LLIURE":
             self.satisfets += 1
             client = self.cua.pop(0)
             barber = self.scheduler.getBarberDsiponible()
+            client.barber = barber
+            self.cadires.DeixarCadiraRentar()
             barber.ocupaBarber()
-            #ocupa cadira
             self.scheduler.tractarEsdeveniment(Event(self, "ACABEM DE TALLAR", event.time + 30, client))
+
+
+
 
 
 
