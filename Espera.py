@@ -19,13 +19,13 @@ class Espera:
         if event.type == "NEXT ARRIVAL":
             if self.ocupacio < 4:
                 barber = self.scheduler.getBarberDsiponible()
-                if self.ocupacio == 0 and barber is not None:
+                if barber is not None:
                     event.entity.estat = "Ates"
                     barber.ocupaBarber()
                     event.entity.barber = barber
                     event.entity.atendreClient(event.time)
                     #ocupa cadira
-                    if self.cadires.AgafarCadiraRentar() != -1:
+                    if self.cadires.AgafarCadiraTallar() != -1:
                         self.scheduler.afegirEsdeveniment(Event(self, "ACABEM DE TALLAR", event.time + 30, event.entity))
                 else:
                     self.ocupacio += 1
@@ -44,6 +44,7 @@ class Espera:
             self.satisfets += 1
             if len(self.cua) > 0:
                 client = self.cua.pop(0)
+                self.ocupacio -= 1
                 barber = self.scheduler.getBarberDsiponible()
                 self.cadires.DeixarCadiraRentar()
                 barber.ocupaBarber()
