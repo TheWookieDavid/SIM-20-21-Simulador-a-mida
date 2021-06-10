@@ -48,11 +48,11 @@ class Scheduler:
     def tractarEsdeveniment(self, event):
         if event.type == "SIMULATION_START":
             # comunicar a tots els objectes que cal preparar-se
-            self.source.tractarEsdeveniment(event)
             self.afegirEsdeveniment((Event(self, 'FI SIMULACIO', event.time + 720, None)))
             self.afegirEsdeveniment((Event(self, 'COMENÇA TORN', event.time, self.barber)))
             self.afegirEsdeveniment(Event(self, 'COMENÇA TORN', event.time + 180, self.barber2))
             self.afegirEsdeveniment(Event(self, 'COMENÇA TORN', event.time + 420, self.barber3))
+            self.source.tractarEsdeveniment(event)
         if event.type == "NEXT ARRIVAL":
             self.queue.tractarEsdeveniment(event)
             self.source.tractarEsdeveniment(event)

@@ -17,7 +17,7 @@ class Source:
             self.processNextArrival(event)
 
     def simulationStart(self, event):
-        nou_event = self.properaArribada(event.time)
+        nou_event = self.properaArribada(event.time - 20)
         self.scheduler.afegirEsdeveniment(nou_event)
 
 
@@ -26,11 +26,11 @@ class Source:
         self.scheduler.afegirEsdeveniment(nou_event)
 
     def properaArribada(self, time):
-        client = Client(time)
         # cada quan generem una arribada
         tempsEntreArribades = 20
         # incrementem estadistics si s'escau
         self.entitatsCreades += 1
-        # programació primera arribada
+        # creem client i programació primera arribada
+        client = Client(time + tempsEntreArribades)
         return Event(self, 'NEXT ARRIVAL', time + tempsEntreArribades, client)
          
